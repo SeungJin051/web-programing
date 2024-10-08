@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>6칙 연산 계산기</title>
+	</head>
+	<body>
+		<div class="container text-center">
+			<h1>Arithmetic Operations</h1>
+			<div>
+				<input type="number" id="lval" placeholder="Enter left value" />
+			</div>
+			<div>
+				<input type="number" id="rval" placeholder="Enter right value" />
+			</div>
+			<div>
+				<button onclick="operate('+')">Add</button>
+				<button onclick="operate('-')">Sub</button>
+				<button onclick="operate('*')">Mul</button>
+				<button onclick="operate('/')">Div</button>
+				<button onclick="operate('%')">Modulo</button>
+				<button onclick="operate('**')">Power</button>
+			</div>
+			<div>
+				<h3>Result :</h3>
+				<p id="result">0</p>
+			</div>
+		</div>
+		<script>
+			function operate(opr) {
+				let lval = Number(document.getElementById('lval').value);
+				let rval = Number(document.getElementById('rval').vaule);
+				var res;
+				console.log(opr);
+				switch (opr) {
+					case '+':
+						res = lval + rval;
+						break;
+					case '-':
+						res = lval - rval;
+						break;
+					case '*':
+						res = lval * rval;
+						break;
+					case '/':
+						res = lval / rval;
+						break;
+					case '%':
+						res = lval % rval;
+						break;
+					case '**':
+						res = lval ** rval;
+						break;
+					default:
+						console.log('Invalid Operator!');
+						break;
+				}
+				document.getElementById('result').textContent = res;
+			}
+		</script>
+	</body>
+</html>
