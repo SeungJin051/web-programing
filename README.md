@@ -1,7 +1,7 @@
 # How to Port Forwarding & DDNS on Mac?
 
 > 2024-2 웹 프로그래밍 Additional Setting
-> 
+> PR
 
 ---
 
@@ -29,7 +29,9 @@
 
 ```markdown
 # 초기 아이디 ktuser
+
 # 초기 비밀번호 homehub
+
 아이디 비밀번호 수정 후 로그인
 ```
 
@@ -47,10 +49,10 @@
 
 <img width="992" alt="4" src="https://github.com/user-attachments/assets/720ef0d2-5d5f-4b28-8b29-e5be21272cb2">
 
-
 ```markdown
 소스 주소 및 포트는 비우며
 외부 포트 외부 포트 번호 및 설명은 자유롭게 입력
+
 # 내부 IP 주소 -> 1. IP 확인한 IP 주소 입력 (172.xx.x.xx)
 ```
 
@@ -62,6 +64,7 @@
 
 ```markdown
 # IP 주소에 2. GiGA WiFi home 진입에서 확인한 IP 주소 입력 (121.xxx.xxx.xxx) 포트 5000
+
 실패!가 뜨게 되는데 이는 웹 서버를 구축해주지 않아서 발생하는 원인
 ```
 
@@ -72,7 +75,7 @@
 ```
 1. npm init -y
 
-2. npm i express 
+2. npm i express
 ```
 
 ```jsx
@@ -86,19 +89,19 @@
 
 ```jsx
 // index.js 생성
-var express = require('express')
-var app = express()
+var express = require('express');
+var app = express();
 
 app.get('/', function (req, res) {
-  res.send('Hello World!')
-})
+	res.send('Hello World!');
+});
 
-app.listen(5000, function() {
-  console.log('Express app port 5000');
-})
+app.listen(5000, function () {
+	console.log('Express app port 5000');
+});
 ```
 
-모두 마치면 터미널을 열고 
+모두 마치면 터미널을 열고
 
 ```
 npm run dev
@@ -144,6 +147,7 @@ CreateHostname을 통해 생성
 
 ```markdown
 Hostname -> 사용될 URL
+
 # IP / Target -> 1. IP 확인의 IP (172.xx.x.xx)
 ```
 
