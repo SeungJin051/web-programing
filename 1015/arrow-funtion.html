@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<h1>Arithemtic wtih Tetration</h1>
+		<div>
+			<input
+				type="number1"
+				id="numberInput1"
+				placeholder="Enter first number"
+				min="0"
+			/>
+		</div>
+		<div>
+			<input
+				type="number2"
+				id="numberInput2"
+				placeholder="Enter second number"
+				min="0"
+			/>
+		</div>
+		<div>
+			<input type="radio" name="operation" id="add" value="add" checked />
+			<label for="add">+</label>
+		</div>
+		<div>
+			<input type="radio" name="operation" id="minus" value="minus" />
+			<label for="minus">-</label>
+		</div>
+		<div>
+			<input type="radio" name="operation" id="mutiply" value="mutiply" />
+			<label for="mutiply">*</label>
+		</div>
+		<div>
+			<input type="radio" name="operation" id="divide" value="divide" />
+			<label for="divide">/</label>
+		</div>
+		<div>
+			<input type="radio" name="operation" id="modulo" value="modulo" />
+			<label for="modulo">%</label>
+		</div>
+		<div>
+			<input type="radio" name="operation" id="power" value="power" />
+			<label for="power"><sub>x</sub>y</label>
+		</div>
+		<div>
+			<input type="radio" name="operation" id="power" value="tetation" />
+			<label for="tetation"><sub>y</sub>x</label>
+		</div>
+		<button onclick="performCalculator()">Calculator</button>
+		<div>
+			<h4>Result</h4>
+			<p id="result">0</p>
+		</div>
+		<script>
+			const operations = {
+				add: (a, b) => a + b,
+				minus: (a, b) => a - b,
+				mutiply: (a, b) => a * b,
+				divide: (a, b) => a / b,
+				modulo: (a, b) => a % b,
+			};
+
+			function performCalculator() {
+				const firstNumber = parseInt(
+					document.getElementById('numberInput1').value,
+				);
+				const secondNumber = parseInt(
+					document.getElementById('numberInput2').value,
+				);
+
+				const selectedOperation = document.querySelector(
+					'input[name="operation"]:checked',
+				).value;
+
+				const result = operations[selectedOperation](firstNumber, secondNumber);
+				console.log(result);
+				document.getElementById('result').textContent = result;
+			}
+		</script>
+	</body>
+</html>
