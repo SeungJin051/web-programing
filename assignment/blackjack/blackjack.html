@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Blackjack Game</title>
+		<script src="https://cdn.tailwindcss.com"></script>
+	</head>
+	<body>
+		<div
+			class="flex items-center justify-center min-h-screen font-mono bg-gray-200"
+		>
+			<div class="text-center game-containers">
+				<h1 class="mb-20 text-5xl font-bold">Blackjack</h1>
+				<div class="hand" id="dealer-hand">
+					<h2 class="m-5 text-2xl">
+						Dealer
+						<span id="dealer-money"></span>
+					</h2>
+					<div class="flex justify-center" id="dealer-cards"></div>
+				</div>
+				<hr
+					class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700"
+				/>
+				<div class="hand" id="player-hand">
+					<h2 class="m-5 text-2xl">Player <span id="player-money"></span></h2>
+					<div class="flex justify-center" id="player-cards"></div>
+					<p class="player-status" id="player-status"></p>
+				</div>
+				<div class="p-10">
+					<button
+						id="hit-button"
+						class="px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700"
+					>
+						Hit
+					</button>
+					<button
+						class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700"
+						id="stand-button"
+					>
+						Stand
+					</button>
+					<button
+						class="px-4 py-2 font-bold text-white bg-gray-500 rounded hover:bg-gray-700"
+						id="new-game-button"
+					>
+						New Game
+					</button>
+				</div>
+
+				<p id="result" class="text-xl font-bold text-red-600"></p>
+			</div>
+		</div>
+		<script>
+			// 카드 이미지 경로 설정
+			const cardImages = {
+				'Hearts-9': 'img/Hearts-9.png',
+				'Diamond-6': 'img/Diamond-6.png',
+				'Hearts-Ace': 'img/Hearts-Ace.png',
+				'Diamond-7': 'img/Diamond-7.png',
+				'Hearts-8': 'img/Hearts-8.png',
+				'Diamond-King': 'img/Diamond-King.png',
+				'Diamond-Queen': 'img/Diamond-Queen.png',
+				'Clubs-9': 'img/Clubs-9.png',
+				'Diamond-5': 'img/Diamond-5.png',
+				'Diamond-4': 'img/Diamond-4.png',
+				'Diamond-10': 'img/Diamond-10.png',
+				'Clubs-8': 'img/Clubs-8.png',
+				'Diamond-3': 'img/Diamond-3.png',
+				'Diamond-2': 'img/Diamond-2.png',
+				'Clubs-Jack': 'img/Clubs-Jack.png',
+				'Spades-2': 'img/Spades-2.png',
+				'Clubs-10': 'img/Clubs-10.png',
+				'Spades-3': 'img/Spades-3.png',
+				'Hearts-Queen': 'img/Hearts-Queen.png',
+				'Spades-King': 'img/Spades-King.png',
+				'Hearts-Jack': 'img/Hearts-Jack.png',
+				'Spades-4': 'img/Spades-4.png',
+				'Spades-5': 'img/Spades-5.png',
+				'Clubs-Queen': 'img/Clubs-Queen.png',
+				'Spades-7': 'img/Spades-7.png',
+				'Spades-6': 'img/Spades-6.png',
+				'Spades-Ace': 'img/Spades-Ace.png',
+				'Diamond-Jack': 'img/Diamond-Jack.png',
+				'Spades-8': 'img/Spades-8.png',
+				'Spades-9': 'img/Spades-9.png',
+				'Clubs-3': 'img/Clubs-3.png',
+				'Clubs-King': 'img/Clubs-King.png',
+				'Clubs-2': 'img/Clubs-2.png',
+				'Hearts-3': 'img/Hearts-3.png',
+				'Hearts-2': 'img/Hearts-2.png',
+				'Clubs-5': 'img/Clubs-5.png',
+				'Spades-Jack': 'img/Spades-Jack.png',
+				'Hearts-King': 'img/Hearts-King.png',
+				'Hearts-6': 'img/Hearts-6.png',
+				'Diamond-9': 'img/Diamond-9.png',
+				'Diamond-8': 'img/Diamond-8.png',
+				'Hearts-7': 'img/Hearts-7.png',
+				'Diamond-Ace': 'img/Diamond-Ace.png',
+				'Hearts-10': 'img/Hearts-10.png',
+				card_back: 'img/card_back.png',
+				'Clubs-4': 'img/Clubs-4.png',
+				'Clubs-Ace': 'img/Clubs-Ace.png',
+				'Clubs-6': 'img/Clubs-6.png',
+				'Hearts-5': 'img/Hearts-5.png',
+				'Spades-Queen': 'img/Spades-Queen.png',
+				'Spades-10': 'img/Spades-10.png',
+				'Hearts-4': 'img/Hearts-4.png',
+			};
+
+			let playerHand = [];
+			let dealerHand = [];
+			let gameOver = false;
+
+			// 카드 추가하는 함수
+			function addCardToHand(hand) {
+				const cardValues = Object.keys(cardImages).filter(
+					card => card !== 'card_back',
+				);
+				const randomCard =
+					cardValues[Math.floor(Math.random() * cardValues.length)];
+				hand.push({ value: randomCard });
+			}
+
+			function updateUI() {
+				// 딜러의 첫 번째 카드는 앞면, 두 번째 카드는 뒷면으로 표시
+				document.getElementById('dealer-cards').innerHTML = `
+    <img src="${cardImages[dealerHand[0].value]}" alt="${dealerHand[0].value}" class="card-img">
+    <img src="${cardImages['card_back']}" alt="card back" class="card-img">
+  `;
+
+				// 플레이어의 카드 표시 (모든 카드를 앞면으로 표시)
+				document.getElementById('player-cards').innerHTML = playerHand
+					.map(card => {
+						// card.value가 'card_back'이 아닌 경우에만 카드 이미지를 표시
+						if (card.value !== 'card_back') {
+							return `<img src="${cardImages[card.value]}" alt="${card.value}" class="card-img">`;
+						}
+						return ''; // 'card_back'인 경우 아무것도 표시하지 않음
+					})
+					.join('');
+
+				// 플레이어 상태 업데이트
+				const playerValue = calculateHandValue(playerHand);
+				document.getElementById('player-status').textContent =
+					`Player: ${playerValue}`;
+			}
+
+			// 딜러의 모든 카드 공개
+			function revealDealerCards() {
+				document.getElementById('dealer-cards').innerHTML = dealerHand
+					.map(
+						card =>
+							`<img src="${cardImages[card.value]}" alt="${card.value}" class="card-img">`,
+					)
+					.join('');
+			}
+
+			// 카드 값 계산 함수
+			function calculateHandValue(hand) {
+				let value = 0;
+				let numAces = 0;
+				hand.forEach(card => {
+					let cardValue = card.value.split('-')[1];
+					if (cardValue === 'Ace') {
+						numAces += 1;
+						value += 11;
+					} else if (['King', 'Queen', 'Jack'].includes(cardValue)) {
+						value += 10;
+					} else {
+						value += parseInt(cardValue);
+					}
+				});
+				// Ace 조정 (11을 1로 변경)
+				while (value > 21 && numAces > 0) {
+					value -= 10;
+					numAces -= 1;
+				}
+				return value;
+			}
+
+			// 게임 종료
+			function endGame(result) {
+				gameOver = true;
+				document.getElementById('result').textContent = result;
+				revealDealerCards(); // 딜러의 카드 공개
+			}
+
+			// Hit 버튼 이벤트 핸들러
+			document
+				.getElementById('hit-button')
+				.addEventListener('click', function () {
+					if (!gameOver) {
+						addCardToHand(playerHand);
+						updateUI();
+
+						const playerValue = calculateHandValue(playerHand);
+						if (playerValue > 21) {
+							endGame('Player Busted! Dealer Wins.');
+						}
+					}
+				});
+
+			// Stand 버튼 이벤트 핸들러
+			document
+				.getElementById('stand-button')
+				.addEventListener('click', function () {
+					if (!gameOver) {
+						let dealerValue = calculateHandValue(dealerHand);
+						while (dealerValue < 17) {
+							addCardToHand(dealerHand);
+							dealerValue = calculateHandValue(dealerHand);
+						}
+
+						const playerValue = calculateHandValue(playerHand);
+						if (dealerValue > 21) {
+							endGame('Dealer Busted! Player Wins.');
+						} else if (dealerValue > playerValue) {
+							endGame('Dealer Wins.');
+						} else if (dealerValue < playerValue) {
+							endGame('Player Wins.');
+						} else {
+							endGame("Push. It's a tie.");
+						}
+					}
+				});
+
+			// 새 게임 초기화 함수
+			function resetGame() {
+				playerHand = [];
+				dealerHand = [];
+				gameOver = false;
+				document.getElementById('result').textContent = '';
+
+				// 새로운 카드를 배분하고 UI 업데이트
+				addCardToHand(playerHand);
+				addCardToHand(playerHand);
+				addCardToHand(dealerHand);
+				addCardToHand(dealerHand);
+				updateUI();
+			}
+
+			// New Game 버튼 이벤트 핸들러
+			document
+				.getElementById('new-game-button')
+				.addEventListener('click', function () {
+					resetGame();
+				});
+			// 초기 세팅
+			addCardToHand(playerHand);
+			addCardToHand(playerHand);
+			addCardToHand(dealerHand);
+			addCardToHand(dealerHand);
+			updateUI();
+		</script>
+	</body>
+</html>
