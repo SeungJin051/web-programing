@@ -1,6 +1,7 @@
 import os
 
 # 이미지 파일의 확장자 목록
+# 스쿼시 머지 테스트
 IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff']
 
 # 이미지 파일 이름 추출 함수
